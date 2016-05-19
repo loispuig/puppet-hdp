@@ -16,12 +16,12 @@ HTTP + Database + PHP servers on Debian OS :
 
 * Puppet module : puppetlabs/stdlib >= 4.5.0 < 5.0.0
 * Puppet module : puppetlabs/apt >= 2.2.1
-* Puppet module : puppetlabs/apt >= 2.2.2"},
-* Puppet module : puppetlabs/ntp >= 4.1.2"},
-* Puppet module : puppetlabs/git >= 0.4.0"},
-* Puppet module : puppetlabs/mysql 3.6.2"},
-* Puppet module : puppetlabs/apache >=1.9.0"},
-* Puppet module : arioch/redis >=1.2.2"}
+* Puppet module : puppetlabs/apt >= 2.2.2
+* Puppet module : puppetlabs/ntp >= 4.1.2
+* Puppet module : puppetlabs/git >= 0.4.0
+* Puppet module : puppetlabs/mysql 3.6.2
+* Puppet module : puppetlabs/apache >=1.9.0
+* Puppet module : arioch/redis >=1.2.2
 * Puppet module : https://github.com/loispuig/puppet-dotdeb.git
 * Puppet module : https://github.com/loispuig/puppet-hostname.git
 * Puppet module : https://github.com/loispuig/puppet-locales.git
