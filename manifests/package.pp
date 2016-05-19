@@ -99,6 +99,11 @@ class hdp::package inherits hdp {
 
 	class { 'pagespeed': } ->
 
+	# redis
+	class { 'redis':
+		bind => $::ipaddress,
+	} ->
+
 	# php
 	class { 'php7':
 		require => Exec['apt_upgrade'],
@@ -106,11 +111,6 @@ class hdp::package inherits hdp {
 
 	# phpmyadmin
 	class { 'phpmyadmin': } ->
-
-	# redis
-	class { 'redis':
-		bind => $::ipaddress,
-	} ->
 
 	# remove useless packages
 	exec { 'apt_remove':
