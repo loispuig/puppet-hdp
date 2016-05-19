@@ -42,5 +42,5 @@ include hdp
 ## Limitations
 
 Tested on Debian 8 using Puppet 3.7 / 3.8  
-Debian 8 required for now.
+Debian 8 required for now.  
 Puppet >= 3.3 required.
