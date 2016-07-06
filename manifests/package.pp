@@ -97,7 +97,7 @@ class hdp::package inherits hdp {
 		#require => Exec['apt_upgrade'],
 	} ->
 
-	#class { 'pagespeed': } ->
+	class { 'pagespeed': } ->
 
 	# redis
 	class { 'redis':
@@ -128,7 +128,7 @@ class hdp::package inherits hdp {
 	class { 'apache::mod::include': }
 	class { 'apache::mod::xsendfile': }
 	class { 'apache::mod::fastcgi': }
-	class { 'apache::mod::pagespeed': }
+	#class { 'apache::mod::pagespeed': }
 	class { 'apache::mod::proxy': }
 	class { 'apache::mod::proxy_http': }
 	class { 'apache::mod::proxy_fcgi': }
