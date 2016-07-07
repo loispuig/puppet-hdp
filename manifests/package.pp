@@ -135,4 +135,26 @@ class hdp::package inherits hdp {
 	class { 'apache::mod::ssl': }
 	apache::mod { 'http2': }
 	#class { 'apache::mod::security': }
+
+	# LetsEncrypt certificate
+	package { 'python-certbot-apache':
+		ensure => 'installed',
+		install_options => [ '-t jessie-backports' ],
+		require => [ Exec['apt_upgrade'], Package['apache2'] ],
+	} ->
+
+	# 
+	exec { 'apt_remove':
+		command => 'certbot --apache',
+		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+	} ->
+
+	cron { 'logrotate':
+		command => 'certbot renew --quiet',
+		user    => 'root',
+		hour    => '0/12',
+		minute  => 0,
+		month   => '*',
+		monthday => '*',
+	}
 }
