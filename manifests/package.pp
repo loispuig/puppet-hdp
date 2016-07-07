@@ -112,6 +112,11 @@ class hdp::package inherits hdp {
 	# phpmyadmin
 	class { 'phpmyadmin': } ->
 
+	# nodejs
+	class { 'nodejs':
+		version => 'stable',
+	}
+
 	# LetsEncrypt certificate
 	package { 'python-certbot-apache':
 		ensure => 'installed',
