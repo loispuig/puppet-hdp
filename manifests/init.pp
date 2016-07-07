@@ -39,6 +39,10 @@ class hdp (
 	$hostname = $::hdp::params::hostname,
 	$domain = $::hdp::params::domain,
 	$aliases = $::hdp::params::aliases,
+
+	$letsencrypt_domain = $::hdp::params::letsencrypt_domain,
+	$letsencrypt_email  = $::hdp::params::letsencrypt_email,
+	
 	$dhparam = $::hdp::params::dhparam,
 	$bits = $::hdp::params::bits,
 	$hash = $::hdp::params::hash,
