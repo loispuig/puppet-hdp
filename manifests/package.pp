@@ -115,7 +115,12 @@ class hdp::package inherits hdp {
 	# nodejs
 	class { 'nodejs':
 		version => 'stable',
-	}
+	} ->
+
+	package { 'bower':
+		provider => 'npm',
+		require  => Class['nodejs']
+	} ->
 
 	# LetsEncrypt certificate
 	package { 'python-certbot-apache':
