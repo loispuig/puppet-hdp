@@ -24,8 +24,8 @@ class hdp::package inherits hdp {
 
 	# hostname
 	class { 'hostname':
-		hostname => 'hdp',
-		domain   => 'vg',
+		hostname => $::hdp_hostname,
+		domain   => $::hdp_domain,
 	} ->
 
 	# locales
