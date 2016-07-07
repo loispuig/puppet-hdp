@@ -135,4 +135,21 @@ Protocols h2 http/1.1',
 			{ 'path' => '^(/.*\.php)$', 'url' => 'fcgi://127.0.0.1:9000/var/www/${SERVER_NAME}$1', 'keywords' => [ 'nocanon', 'interpolate' ] },
 		],
 	}*/
+
+	# LetsEncrypt
+	exec { 'certbot':
+		command => 'certbot --apache --domains damp.kctus.fr --email admin@kctus.fr --agree-tos',
+		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+		require => Package['python-certbot-apache'],
+	} ->
+
+	cron { 'certbot_cron':
+		command => 'certbot renew --quiet',
+		user    => 'root',
+		hour    => '*/12',
+		minute  => 0,
+		month   => '*',
+		monthday => '*',
+		weekday => '*',
+	}
 }

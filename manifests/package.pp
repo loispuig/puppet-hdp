@@ -112,6 +112,13 @@ class hdp::package inherits hdp {
 	# phpmyadmin
 	class { 'phpmyadmin': } ->
 
+	# LetsEncrypt certificate
+	package { 'python-certbot-apache':
+		ensure => 'installed',
+		install_options => [ '-t jessie-backports' ],
+		require => [ Exec['apt_upgrade'], Package['apache2'] ],
+	} ->
+
 	# remove useless packages
 	exec { 'apt_remove':
 		command => 'apt-get -y autoremove',
@@ -135,27 +142,4 @@ class hdp::package inherits hdp {
 	class { 'apache::mod::ssl': }
 	apache::mod { 'http2': }
 	#class { 'apache::mod::security': }
-
-	# LetsEncrypt certificate
-	package { 'python-certbot-apache':
-		ensure => 'installed',
-		install_options => [ '-t jessie-backports' ],
-		require => [ Exec['apt_upgrade'], Package['apache2'] ],
-	} ->
-
-	# 
-	exec { 'certbot':
-		command => 'certbot --apache --domains damp.kctus.fr --email admin@kctus.fr --agree-tos',
-		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-	} ->
-
-	cron { 'certbot_cron':
-		command => 'certbot renew --quiet',
-		user    => 'root',
-		hour    => '*/12',
-		minute  => 0,
-		month   => '*',
-		monthday => '*',
-		weekday => '*',
-	}
 }
