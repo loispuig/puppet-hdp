@@ -36,7 +36,8 @@
 # Copyright 2016 Your name here, unless otherwise noted.
 #
 class hdp (
-	$fqdn = $::hdp::params::fqdn,
+	$hostname = $::hdp::params::hostname,
+	$domain = $::hdp::params::domain,
 	$dhparam = $::hdp::params::dhparam,
 	$bits = $::hdp::params::bits,
 	$hash = $::hdp::params::hash,
