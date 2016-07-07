@@ -84,7 +84,7 @@ class hdp::config inherits hdp {
 		options => [ 'Indexes', 'FollowSymLinks', 'MultiViews' ],
 		filters => [
             'FilterDeclare  COMPRESS',
-            'FilterProvider COMPRESS DEFLATE resp=Content-Type $text/html',
+            'FilterProvider COMPRESS DEFLATE "%{Content_Type} = \'text/html\'"',
             'FilterChain    COMPRESS',
             'FilterProtocol COMPRESS DEFLATE change=yes;byteranges=no',
 		],
