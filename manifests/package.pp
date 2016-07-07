@@ -144,12 +144,12 @@ class hdp::package inherits hdp {
 	} ->
 
 	# 
-	exec { 'apt_remove':
-		command => 'certbot --apache',
+	exec { 'certbot':
+		command => 'certbot --apache --domains damp.kctus.fr --email admin@kctus.fr --agree-tos',
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 	} ->
 
-	cron { 'logrotate':
+	cron { 'certbot_cron':
 		command => 'certbot renew --quiet',
 		user    => 'root',
 		hour    => '0/12',
