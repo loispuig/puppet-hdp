@@ -31,6 +31,21 @@ class hdp::source inherits hdp {
 		priority => 500,
 	} ->
 
+	apt::source { 'jessie-backports':
+		location => 'http://httpredir.debian.org/debian',
+		release  => 'wheezy-backports',
+		repos    => 'main',
+		include  => {
+			'deb' => true,
+			'src' => false,
+		},
+	} ->
+
+	apt::pin { 'jessie-backports':
+		release => "jessie-backports",
+		priority => -1,
+	} ->
+
 	# Testing repository to get last Apache version
 	apt::source { "testing":
 		location => 'http://httpredir.debian.org/debian',
