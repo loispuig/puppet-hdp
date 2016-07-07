@@ -1,5 +1,6 @@
 class hdp::params {
-	#$fqdn           = 'hdp.vg'
+	$hostname       = 'hdp'
+	$domain         = 'vg'
 	# SSL
 	$dhparam 		= 512
 	$bits			= 4096
