@@ -156,5 +156,6 @@ class hdp::package inherits hdp {
 		minute  => 0,
 		month   => '*',
 		monthday => '*',
+		weekday => '*',
 	}
 }
