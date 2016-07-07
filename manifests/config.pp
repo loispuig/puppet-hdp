@@ -75,7 +75,7 @@ class hdp::config inherits hdp {
 		servername => 'localhost',
 		serveraliases => [
 			$::hdp_hostname+'.'+$::hdp_domain,
-			'test.kctus.fr'
+			'test.kctus.fr',
 		],
 		port    => '80',
 		docroot => '/var/www',
