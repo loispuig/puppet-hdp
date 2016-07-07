@@ -140,7 +140,8 @@ Protocols h2 http/1.1',
 	exec { 'certbot':
 		command => 'certbot --apache --domains damp.kctus.fr --email admin@kctus.fr --agree-tos',
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-		require => Package['python-certbot-apache'],
+		require => [ Package['python-certbot-apache'], Apache::Vhost['localhost-ssl'] ],
+		unless  => [ "test -f /etc/letsencrypt/live/damp.kctus.fr/cert.pem" ],
 	} ->
 
 	cron { 'certbot_cron':
