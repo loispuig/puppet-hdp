@@ -138,7 +138,7 @@ Protocols h2 http/1.1',
 
 	# LetsEncrypt
 	exec { 'certbot':
-		command => "certbot --apache --domains ${letsencrypt_domains} --email ${letsencrypt_email} --agree-tos'"
+		command => "certbot --apache --domains ${letsencrypt_domains} --email ${letsencrypt_email} --agree-tos"
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 		require => [ Package['python-certbot-apache'], Apache::Vhost['localhost-ssl'] ],
 		unless  => [ "test -f /etc/letsencrypt/live/damp.kctus.fr/cert.pem" ],
