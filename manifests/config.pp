@@ -87,12 +87,12 @@ class hdp::config inherits hdp {
 		],
 		custom_fragment => '#ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
 <FilesMatch \.php$>
-SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
+    SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
 </FilesMatch>
 Protocols h2c http/1.1',
 	}
 
-	/*apache::vhost { 'localhost-ssl':
+	apache::vhost { 'localhost-ssl':
 		servername => 'localhost',
 		port    => '443',
 		docroot => '/var/www',
@@ -102,12 +102,11 @@ Protocols h2c http/1.1',
 		docroot_owner => 'www-data',
 		docroot_group => 'www-data',
 		options => [ 'Indexes', 'FollowSymLinks', 'MultiViews' ],
-		custom_fragment => '
-	  #ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
-	  <FilesMatch \.php$>
-	    SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
-	  </FilesMatch>
-	  Protocols h2 http/1.1',
+		custom_fragment => '#ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
+<FilesMatch \.php$>
+    SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
+</FilesMatch>
+Protocols h2 http/1.1',
 		#SSLEngine on
 		#SSLCertificateFile /etc/ssl/certs/your_cert
 		#SSLCertificateChainFile /etc/ssl/certs/chained_certs
@@ -117,7 +116,7 @@ Protocols h2c http/1.1',
 		#SSLProtocol all -SSLv2 -SSLv3
 		#SSLCompression Off
 		#Header add Strict-Transport-Security "max-age=15768000"
-	}*/
+	}
 
 	/*apache::vhost { 'hostnames.lamp':
 		vhost_name      => '*',
