@@ -88,12 +88,11 @@ class hdp::config inherits hdp {
             'FilterChain    COMPRESS',
             'FilterProtocol COMPRESS DEFLATE change=yes;byteranges=no',
 		],
-		custom_fragment => '
-	  #ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
-	  <FilesMatch \.php$>
-	    SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
-	  </FilesMatch>
-	  Protocols h2c http/1.1',
+		custom_fragment => '#ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
+<FilesMatch \.php$>
+SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
+</FilesMatch>
+Protocols h2c http/1.1',
 	}
 
 	/*apache::vhost { 'localhost-ssl':
