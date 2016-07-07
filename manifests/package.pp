@@ -152,7 +152,7 @@ class hdp::package inherits hdp {
 	cron { 'certbot_cron':
 		command => 'certbot renew --quiet',
 		user    => 'root',
-		hour    => '0/12',
+		hour    => '*/12',
 		minute  => 0,
 		month   => '*',
 		monthday => '*',
