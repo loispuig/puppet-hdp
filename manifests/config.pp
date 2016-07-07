@@ -15,26 +15,6 @@ class hdp::config inherits hdp {
 		require => Class[ 'apache', 'php7' ],
 	}
 
-	/*class { '::openssl':
-		package_ensure         => latest,
-		ca_certificates_ensure => latest,
-	}*/
-
-	#openssl::dhparam { '/etc/ssl/private/dhparam.pem': }
-	/*dhparam { '/etc/ssl/certs/dhparam.pem':
-		ensure => 'present',
-		size => 4096,
-	}*/
-
-	/*file { "ssl-dir":
-		path 	=> '/root/.ssl',
-		ensure  => directory,
-		owner   => 'root',
-		group   => 'root',
-		mode    => '0600',
-		require => Package['openssl'],
-	} ->*/
-
 	exec { 'ssl-dhparam':
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 		command => "openssl dhparam ${dhparam} -out /etc/ssl/private/dh${dhparam}.pem",
@@ -52,13 +32,6 @@ class hdp::config inherits hdp {
 		require => Exec['ssl-dhparam'],
 	} ->
 
-	/*file { "/etc/ssl/private/dh${dhparam}.pem":
-		ensure  => 'link',
-		target => "/root/.ssl/dh${dhparam}.pem",
-		require => File["ssl-dhparam-perms"],
-		mode    => '0600',
-	} ->*/
-
 	file { "ssl-conf":
 		path 	=> '/etc/ssl/private/openssl.cnf',
 		ensure  => present,
@@ -74,37 +47,21 @@ class hdp::config inherits hdp {
 		require => Package['openssl'],
 	} ->
 
-	/*file { "/etc/ssl/private/key.pem":
-		ensure  => 'link',
-		target => "/etc/ssl/private/key.pem",
-		require => Exec["ssl-gen-key"],
-		mode    => '0600',
-	} ->*/
-
 	exec { 'ssl-gen-cert':
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 		command => "openssl req -new -x509 -${hash} -days 3650 -extensions v3_ca -passin pass:root -config /etc/ssl/private/openssl.cnf -key /etc/ssl/private/key.pem -out /etc/ssl/private/cert.pem",
 	}
-	/* ->
-
-	file { "/etc/ssl/private/cert.pem":
-		ensure  => 'link',
-		target => "/root/.ssl/cert.pem",
-		require => Exec["ssl-gen-cert"],
-	}*/
-
-	#openssl req -new -x509 -extensions v3_ca -keyout private/cakey.pem -out cacert.pem -days 365 -config ./openssl.cnf
 
 	/*openssl::certificate::x509 { 'ssl-localhost':
-		#ensure       => present,
-		country      => 'FR',
-		organization => 'kctus MULTIMEDIA',
-		commonname   => $fqdn,
-		state        => 'Aquitaine',
-		locality     => 'Hautefort',
-		unit         => 'kctus MULTIMEDIA',
+		#ensure      => present,
+		country      => ${country},
+		organization => ${organization},
+		commonname   => ${fqdn},
+		state        => ${state},
+		locality     => ${locality},
+		unit         => ${unit},
 		altnames     => [ 'localhost' ],
-		email        => 'lois.puig@kctus.fr',
+		email        => ${email},
 		days         => 3650,
 		base_dir     => '/var/www/ssl',
 		owner        => 'www-data',
@@ -116,14 +73,21 @@ class hdp::config inherits hdp {
 
 	apache::vhost { 'localhost':
 		servername => 'localhost',
-		serveraliases =>[
-			$::hdp_hostname,
+		serveraliases => [
+			$::hdp_hostname+'.'+$::hdp_domain,
+			'test.kctus.fr'
 		],
 		port    => '80',
 		docroot => '/var/www',
 		docroot_owner => 'www-data',
 		docroot_group => 'www-data',
 		options => [ 'Indexes', 'FollowSymLinks', 'MultiViews' ],
+		filters => [
+            'FilterDeclare  COMPRESS',
+            'FilterProvider COMPRESS DEFLATE resp=Content-Type $text/html',
+            'FilterChain    COMPRESS',
+            'FilterProtocol COMPRESS DEFLATE change=yes;byteranges=no',
+		],
 		custom_fragment => '
 	  #ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
 	  <FilesMatch \.php$>
@@ -132,7 +96,7 @@ class hdp::config inherits hdp {
 	  Protocols h2c http/1.1',
 	}
 
-	apache::vhost { 'localhost-ssl':
+	/*apache::vhost { 'localhost-ssl':
 		servername => 'localhost',
 		port    => '443',
 		docroot => '/var/www',
@@ -157,7 +121,7 @@ class hdp::config inherits hdp {
 		#SSLProtocol all -SSLv2 -SSLv3
 		#SSLCompression Off
 		#Header add Strict-Transport-Security "max-age=15768000"
-	}
+	}*/
 
 	/*apache::vhost { 'hostnames.lamp':
 		vhost_name      => '*',
@@ -176,15 +140,4 @@ class hdp::config inherits hdp {
 			{ 'path' => '^(/.*\.php)$', 'url' => 'fcgi://127.0.0.1:9000/var/www/${SERVER_NAME}$1', 'keywords' => [ 'nocanon', 'interpolate' ] },
 		],
 	}*/
-
-	#apache::vhost { 'localhost-ssl.loc':
-	#	vhost_name      => '*',
-	#	port            => '443',
-	#	virtual_docroot => '/var/www/%-2+',
-	#	docroot         => '/var/www',
-	#	ssl             => true,
-	#	serveraliases   => ['*.loc',],
-	#	docroot_owner => 'www-data',
-	#	docroot_group => 'www-data',
-	#} ->
 }
