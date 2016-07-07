@@ -38,6 +38,7 @@
 class hdp (
 	$hostname = $::hdp::params::hostname,
 	$domain = $::hdp::params::domain,
+	$aliases = $::hdp::params::aliases,
 	$dhparam = $::hdp::params::dhparam,
 	$bits = $::hdp::params::bits,
 	$hash = $::hdp::params::hash,
