@@ -153,4 +153,9 @@ Protocols h2 http/1.1',
 		monthday => '*',
 		weekday => '*',
 	}
+
+	file_line { 'cdvarwww':
+		line => 'cd /var/www',
+		path => '/home/vagrant/.bashrc',
+	}
 }
