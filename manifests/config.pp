@@ -116,6 +116,9 @@ class hdp::config inherits hdp {
 
 	apache::vhost { 'localhost':
 		servername => 'localhost',
+		serveraliases =>[
+			$::hdp_hostname,
+		],
 		port    => '80',
 		docroot => '/var/www',
 		docroot_owner => 'www-data',
