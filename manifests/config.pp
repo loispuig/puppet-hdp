@@ -74,7 +74,7 @@ class hdp::config inherits hdp {
 	apache::vhost { 'localhost':
 		servername => 'localhost',
 		serveraliases => [
-			"${hostname}.{$domain}",
+			"${hostname}.${domain}",
 			"test.kctus.fr",
 		],
 		port    => '80',
