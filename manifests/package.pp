@@ -115,16 +115,15 @@ class hdp::package inherits hdp {
 	# nodejs
 	class { 'nodejs': } ->
 
-	package { 'bower':
-		ensure => 'present',
-		provider => 'npm',
-		require  => Class['nodejs']
-	} ->
-
 	# remove useless packages
 	exec { 'apt_remove':
 		command => 'apt-get -y autoremove',
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+	}
+
+	package { 'bower':
+		ensure => 'present',
+		provider => 'npm',
 	}
 
 	class { 'apache::mod::headers': }
