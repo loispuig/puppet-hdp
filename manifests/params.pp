@@ -3,9 +3,9 @@ class hdp::params {
 	$domain         = 'vg'
 	$aliases        = false
 	$letsencrypt    = {
-		install     = false
-		domains     = ''
-		email       = 'admin@localhost'
+		"install"   => false
+		"domains"   => ''
+		"email"     => 'admin@localhost'
 	}
 	# SSL
 	$dhparam 		= 512
