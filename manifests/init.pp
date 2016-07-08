@@ -40,8 +40,11 @@ class hdp (
 	$domain = $::hdp::params::domain,
 	$aliases = $::hdp::params::aliases,
 
-	$letsencrypt_domains = $::hdp::params::letsencrypt_domains,
-	$letsencrypt_email   = $::hdp::params::letsencrypt_email,
+	$letsencrypt = {
+		install = $::hdp::params::letsencrypt::install,
+		domains = $::hdp::params::letsencrypt::domains,
+		email   = $::hdp::params::letsencrypt::email,
+	}
 	
 	$dhparam = $::hdp::params::dhparam,
 	$bits = $::hdp::params::bits,
