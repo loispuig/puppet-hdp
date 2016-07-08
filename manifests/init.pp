@@ -44,7 +44,7 @@ class hdp (
 		install = $::hdp::params::letsencrypt::install,
 		domains = $::hdp::params::letsencrypt::domains,
 		email   = $::hdp::params::letsencrypt::email,
-	}
+	},
 	
 	$dhparam = $::hdp::params::dhparam,
 	$bits = $::hdp::params::bits,
