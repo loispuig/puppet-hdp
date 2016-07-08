@@ -13,7 +13,7 @@
 		{"name":"puppetlabs/git","version_requirement":">= 0.4.0"},
 		{"name":"puppetlabs/mysql","version_requirement":"3.6.2"},
 		{"name":"puppetlabs/apache","version_requirement":">=1.9.0"},
-		{"name":"arioch/redis","version_requirement":">=1.2.2"},
-		{"name":"willdurand/nodejs","version_requirement":"1.x.x"}
+		{"name":"puppet/nodejs","version_requirement":">=2.0.1"},
+		{"name":"arioch/redis","version_requirement":">=1.2.2"}
 	]
 }

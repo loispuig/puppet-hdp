@@ -113,20 +113,12 @@ class hdp::package inherits hdp {
 	class { 'phpmyadmin': } ->
 
 	# nodejs
-	class { 'nodejs':
-		version => 'stable',
-	} ->
+	class { 'nodejs': } ->
 
 	package { 'bower':
+		ensure => 'present',
 		provider => 'npm',
 		require  => Class['nodejs']
-	} ->
-
-	# LetsEncrypt certificate
-	package { 'python-certbot-apache':
-		ensure => 'installed',
-		install_options => [ '-t jessie-backports' ],
-		require => [ Exec['apt_upgrade'], Package['apache2'] ],
 	} ->
 
 	# remove useless packages

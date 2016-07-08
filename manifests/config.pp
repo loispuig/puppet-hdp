@@ -137,21 +137,34 @@ Protocols h2 http/1.1',
 	}*/
 
 	# LetsEncrypt
-	exec { 'certbot':
-		command => "certbot --apache --domains ${letsencrypt[domains]} --email ${letsencrypt[email]} --agree-tos",
-		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-		require => [ Package['python-certbot-apache'], Apache::Vhost['localhost-ssl'] ],
-		unless  => [ "test -f /etc/letsencrypt/live/damp.kctus.fr/cert.pem" ],
-	} ->
+	if $letsencrypt[install] {
+		package { 'python-certbot-apache':
+			ensure => 'installed',
+			install_options => [ '-t jessie-backports' ],
+			require => [ Exec['apt_upgrade'], Package['apache2'] ],
+		} ->
 
-	cron { 'certbot_cron':
-		command => 'certbot renew --quiet',
-		user    => 'root',
-		hour    => '*/12',
-		minute  => 0,
-		month   => '*',
-		monthday => '*',
-		weekday => '*',
+		exec { 'certbot':
+			command => "certbot --apache --domains ${letsencrypt[domains]} --email ${letsencrypt[email]} --agree-tos",
+			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+			require => [ Package['python-certbot-apache'], Apache::Vhost['localhost-ssl'] ],
+			unless  => [ "test -f /etc/letsencrypt/live/damp.kctus.fr/cert.pem" ],
+		} ->
+
+		cron { 'certbot_cron':
+			command  => 'certbot renew --quiet',
+			user     => 'root',
+			hour     => '*/12',
+			minute   => 0,
+			month    => '*',
+			monthday => '*',
+			weekday  => '*',
+		}
+	}
+	else {
+		package { 'python-certbot-apache':
+			ensure => 'absent',
+		}
 	}
 
 	file_line { 'cdvarwww':
