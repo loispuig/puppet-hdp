@@ -52,25 +52,6 @@ class hdp::config inherits hdp {
 		command => "openssl req -new -x509 -${hash} -days 3650 -extensions v3_ca -passin pass:root -config /etc/ssl/private/openssl.cnf -key /etc/ssl/private/key.pem -out /etc/ssl/private/cert.pem",
 	}
 
-	/*openssl::certificate::x509 { 'ssl-localhost':
-		#ensure      => present,
-		country      => ${country},
-		organization => ${organization},
-		commonname   => ${fqdn},
-		state        => ${state},
-		locality     => ${locality},
-		unit         => ${unit},
-		altnames     => [ 'localhost' ],
-		email        => ${email},
-		days         => 3650,
-		base_dir     => '/var/www/ssl',
-		owner        => 'www-data',
-		group        => 'www-data',
-		password     => 'root',
-		force        => false,
-		cnf_tpl      => 'hdp/cert.cnf.erb'
-	}*/
-
 	apache::vhost { 'localhost':
 		servername => 'localhost',
 		serveraliases => "${aliases}",
@@ -92,63 +73,49 @@ class hdp::config inherits hdp {
 Protocols h2c http/1.1',
 	}
 
+	if $letsencrypt[install] {
+		$ssl_cert = '/etc/letsencrypt/live/damp.kctus.fr/fullchain.pem'
+		$ssl_key = '/etc/letsencrypt/live/damp.kctus.fr/privkey.pem'
+	}
+	else {
+		$ssl_cert = '/etc/ssl/private/cert.pem'
+		$ssl_key = '/etc/ssl/private/key.pem'
+	}
+
 	apache::vhost { 'localhost-ssl':
 		servername => 'localhost',
+		serveraliases => "${aliases}",
 		port    => '443',
 		docroot => '/var/www',
 		ssl     => true,
-		ssl_cert => '/etc/ssl/private/cert.pem',
-		ssl_key  => '/etc/ssl/private/key.pem',
+		ssl_cert => $ssl_cert,
+		ssl_key  => $ssl_key,
 		docroot_owner => 'www-data',
 		docroot_group => 'www-data',
 		options => [ 'Indexes', 'FollowSymLinks', 'MultiViews' ],
-		custom_fragment => '#ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php/php7.0-fpm.sock|fcgi://127.0.0.1:9000/var/www/"
-<FilesMatch \.php$>
+		custom_fragment => '<FilesMatch \.php$>
     SetHandler "proxy:unix:/run/php/php7.0-fpm.sock|fcgi://localhost"
 </FilesMatch>
 Protocols h2 http/1.1',
-		#SSLEngine on
-		#SSLCertificateFile /etc/ssl/certs/your_cert
-		#SSLCertificateChainFile /etc/ssl/certs/chained_certs
-		#SSLCertificateKeyFile /etc/ssl/certs/your_private_key
-		#SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4
-		#SSLHonorCipherOrder on
-		#SSLProtocol all -SSLv2 -SSLv3
-		#SSLCompression Off
-		#Header add Strict-Transport-Security "max-age=15768000"
 	}
-
-	/*apache::vhost { 'hostnames.lamp':
-		vhost_name      => '*',
-		port            => '80',
-		virtual_docroot => '/var/www/%-2+',
-		docroot         => '/var/www',
-		serveraliases   => ['*.vagrant',],
-		docroot_owner   => 'www-data',
-		docroot_group   => 'www-data',
-		error_log_file  => "localhost.vagrant_error.log",
-		custom_fragment => "ProxyPassInterpolateEnv On",
-		rewrites		=> [
-			{ rewrite_rule => ['.* - [E=SERVER_NAME:%{SERVER_NAME}]'] },
-		],
-		proxy_pass_match => [
-			{ 'path' => '^(/.*\.php)$', 'url' => 'fcgi://127.0.0.1:9000/var/www/${SERVER_NAME}$1', 'keywords' => [ 'nocanon', 'interpolate' ] },
-		],
-	}*/
 
 	# LetsEncrypt
 	if $letsencrypt[install] {
+
+		$domains = split($letsencrypt[domains], ',')
+		notice($domains[0])
+
 		package { 'python-certbot-apache':
 			ensure => 'installed',
 			install_options => [ '-t jessie-backports' ],
-			require => [ Exec['apt_upgrade'], Package['apache2'] ],
+			require => [ Exec['apt_upgrade'], Package['apache2'], Apache::Vhost['localhost-ssl'] ],
 		} ->
 
 		exec { 'certbot':
-			command => "certbot --apache --domains ${letsencrypt[domains]} --email ${letsencrypt[email]} --agree-tos",
+			command => "certbot --apache --domains ${letsencrypt[domains]} --email ${letsencrypt[email]} --agree-tos --non-interactive",
 			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 			require => [ Package['python-certbot-apache'], Apache::Vhost['localhost-ssl'] ],
-			unless  => [ "test -f /etc/letsencrypt/live/damp.kctus.fr/cert.pem" ],
+			unless  => [ "test -f /etc/letsencrypt/live/${domains[0]}/cert.pem" ],
 		} ->
 
 		cron { 'certbot_cron':
@@ -163,7 +130,7 @@ Protocols h2 http/1.1',
 	}
 	else {
 		package { 'python-certbot-apache':
-			ensure => 'absent',
+			ensure => 'purged',
 		}
 	}
 

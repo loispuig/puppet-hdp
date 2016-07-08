@@ -112,14 +112,14 @@ class hdp::package inherits hdp {
 	# phpmyadmin
 	class { 'phpmyadmin': } ->
 
-	# nodejs
-	class { 'nodejs': } ->
-
 	# remove useless packages
 	exec { 'apt_remove':
 		command => 'apt-get -y autoremove',
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 	}
+
+	# nodejs
+	class { 'nodejs': }
 
 	package { 'bower':
 		ensure => 'present',
