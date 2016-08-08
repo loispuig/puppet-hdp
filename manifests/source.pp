@@ -82,6 +82,11 @@ class hdp::source inherits hdp {
 	# dotdeb repository
 	#class { 'dotdeb': } ->
 
+	# apt-transport-https
+	package { 'apt-transport-https':
+		ensure => 'installed',
+	} ->
+
 	Exec['apt_update'] ->
 
 	exec { 'apt_upgrade':
