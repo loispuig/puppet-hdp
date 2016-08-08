@@ -125,7 +125,7 @@ class hdp::package inherits hdp {
 	}
 
 	# nodejs
-	class { 'nodejs': }
+	#class { 'nodejs': }
 
 	package { 'bower':
 		ensure => 'present',
