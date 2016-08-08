@@ -5,6 +5,12 @@ class hdp::package inherits hdp {
 		require => Exec['apt_upgrade'],
 	} ->
 
+	# openssh
+	package { 'openssh-server':
+		ensure => 'installed',
+		require => Exec['apt_upgrade'],
+	} ->
+
 	# git
 	class { '::git':
 		require => Exec['apt_upgrade'],
