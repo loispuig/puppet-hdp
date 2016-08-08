@@ -8,7 +8,6 @@ class hdp::source inherits hdp {
 	# apt-transport-https
 	package { 'apt-transport-https':
 		ensure => 'installed',
-		require => Exec['apt_update'],
 	} ->
 
 	# Non free repo required for apache mod_fastcgi
