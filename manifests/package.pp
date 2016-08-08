@@ -8,6 +8,12 @@ class hdp::package inherits hdp {
 	# openssh
 	package { 'openssh-server':
 		ensure => 'installed',
+		require => Exec['apt-transport-https'],
+	} ->
+
+	# openssh
+	package { 'openssh-server':
+		ensure => 'installed',
 		require => Exec['apt_upgrade'],
 	} ->
 
