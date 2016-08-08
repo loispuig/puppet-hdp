@@ -32,7 +32,7 @@ class hdp::source inherits hdp {
 	} ->
 
 	apt::source { 'jessie-backports':
-		location => 'http://backports.debian.org/debian-backports',
+		location => 'http://ftp.debian.org/debian',
 		release  => 'jessie-backports',
 		repos    => 'main contrib non-free',
 		include  => {
