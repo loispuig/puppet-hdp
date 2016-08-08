@@ -80,7 +80,7 @@ class hdp::source inherits hdp {
 	} ->
 
 	# dotdeb repository
-	class { 'dotdeb': } ->
+	#class { 'dotdeb': } ->
 
 	Exec['apt_update'] ->
 
