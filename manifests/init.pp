@@ -61,6 +61,6 @@ class hdp (
 	anchor { 'hdp::begin': } ->
 		class { '::hdp::source': } ->
 		class { '::hdp::package': }
-		#class { '::hdp::config': }
+		class { '::hdp::config': }
 	anchor { 'hdp::end': }
 }
