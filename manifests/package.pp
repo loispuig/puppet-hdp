@@ -89,6 +89,11 @@ class hdp::package inherits hdp {
 		require => Exec['apt_upgrade'],
 	} ->
 
+	# php
+	class { 'php7':
+		require => Exec['apt_upgrade'],
+	} ->
+
 	# apache
 	class { 'apache':
 		#apache_name => 'apache2/testing',
@@ -108,11 +113,6 @@ class hdp::package inherits hdp {
 	# redis
 	class { 'redis':
 		bind => $::ipaddress,
-	} ->
-
-	# php
-	class { 'php7':
-		require => Exec['apt_upgrade'],
 	} ->
 
 	# phpmyadmin
