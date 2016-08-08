@@ -59,8 +59,8 @@ class hdp (
 	$altnames = $::hdp::params::altnames,
 ) inherits hdp::params  {
 	anchor { 'hdp::begin': } ->
-		class { '::hdp::source': } #->
-		#class { '::hdp::package': }
+		class { '::hdp::source': } ->
+		class { '::hdp::package': }
 		#class { '::hdp::config': }
 	anchor { 'hdp::end': }
 }
