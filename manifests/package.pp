@@ -8,7 +8,7 @@ class hdp::package inherits hdp {
 	# apt-transport-https
 	package { 'apt-transport-https':
 		ensure => 'installed',
-		require => Exec['apt-transport-https'],
+		require => Exec['apt_upgrade'],
 	} ->
 
 	# openssh
