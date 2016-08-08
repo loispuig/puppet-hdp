@@ -125,12 +125,12 @@ class hdp::package inherits hdp {
 	}
 
 	# nodejs
-	#class { 'nodejs': }
+	#class { 'nodejs': } ->
 
-	package { 'bower':
+	/*package { 'bower':
 		ensure => 'present',
 		provider => 'npm',
-	}
+	}*/
 
 	class { 'apache::mod::headers': }
 	class { 'apache::mod::cache': }

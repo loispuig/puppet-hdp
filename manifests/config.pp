@@ -15,7 +15,7 @@ class hdp::config inherits hdp {
 		require => Class[ 'apache', 'php7' ],
 	}
 
-	exec { 'ssh-keygen':
+	/*exec { 'ssh-keygen':
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 		command => 'ssh-keygen -t rsa -b 4096 -N "" -C "" -q -f /vagrant/.ssh/id_rsa',
 		unless  => [ "test -f /vagrant/.ssh/id_rsa" ],
@@ -35,7 +35,7 @@ class hdp::config inherits hdp {
 		command => "openssl dhparam ${dhparam} -out /etc/ssl/private/dh${dhparam}.pem",
 		unless  => [ "test -f /etc/ssl/private/dh${dhparam}.pem" ],
 		require => Package['openssl'],
-	} ->
+	} ->*/
 
 	# Set file access
 	file { "ssl-dhparam-perms":
