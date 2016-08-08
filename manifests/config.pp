@@ -35,7 +35,7 @@ class hdp::config inherits hdp {
 		command => "openssl dhparam ${dhparam} -out /etc/ssl/private/dh${dhparam}.pem",
 		unless  => [ "test -f /etc/ssl/private/dh${dhparam}.pem" ],
 		require => Package['openssl'],
-	} ->*/
+	} ->
 
 	# Set file access
 	file { "ssl-dhparam-perms":
@@ -65,7 +65,7 @@ class hdp::config inherits hdp {
 	exec { 'ssl-gen-cert':
 		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
 		command => "openssl req -new -x509 -${hash} -days 3650 -extensions v3_ca -passin pass:root -config /etc/ssl/private/openssl.cnf -key /etc/ssl/private/key.pem -out /etc/ssl/private/cert.pem",
-	}
+	}*/
 
 	apache::vhost { 'localhost':
 		servername => 'localhost',
