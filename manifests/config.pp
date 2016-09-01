@@ -1,4 +1,26 @@
 class hdp::config inherits hdp {
+	file { 'ssh-dir':
+		ensure => directory,
+		owner => 'vagrant',
+		group => 'vagrant',
+		mode => '0600',
+	} ->
+
+	exec { 'ssh-keygen':
+			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+			command => 'ssh-keygen -t rsa -b 4096 -N "" -C "" -q -f /vagrant/.ssh/id_rsa',
+			unless  => [ "test -f /vagrant/.ssh/id_rsa" ],
+			require => Package['openssh-server'],
+	} ->
+
+	file { "ssh-key-perms":
+		path 	=> '/vagrant/.ssh/id_rsa',
+		ensure  => present,
+		owner   => 'vagrant',
+		group   => 'vagrant',
+		mode    => '0600',
+	} ->
+
 	file { 'remove-default-html-directory':
 		ensure => absent,
 		path => '/var/www/html',
@@ -93,21 +115,6 @@ Protocols h2 http/1.1',
 	else {
 		package { 'python-certbot-apache':
 			ensure => 'purged',
-		} ->
-
-		exec { 'ssh-keygen':
-			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-			command => 'ssh-keygen -t rsa -b 4096 -N "" -C "" -q -f /vagrant/.ssh/id_rsa',
-			unless  => [ "test -f /vagrant/.ssh/id_rsa" ],
-			require => Package['openssh-server'],
-		} ->
-
-		file { "ssh-key-perms":
-			path 	=> '/vagrant/.ssh/id_rsa',
-			ensure  => present,
-			owner   => 'vagrant',
-			group   => 'vagrant',
-			mode    => '0600',
 		} ->
 
 		exec { 'ssl-dhparam':
