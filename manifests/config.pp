@@ -13,7 +13,7 @@ class hdp::config inherits hdp {
 			require => Package['openssh-server'],
 	} ->
 
-	file { "ssh-key-perms":
+	file { "ssh-privkey-perms":
 		path 	=> '/vagrant/.ssh/id_rsa',
 		ensure  => present,
 		owner   => 'vagrant',
@@ -21,7 +21,7 @@ class hdp::config inherits hdp {
 		mode    => '0600',
 	} ->
 
-	file { "ssh-key-perms":
+	file { "ssh-pubkey-perms":
 		path 	=> '/vagrant/.ssh/id_rsa.pub',
 		ensure  => present,
 		owner   => 'vagrant',
