@@ -1,5 +1,5 @@
 class hdp::config inherits hdp {
-	file { 'ssh-dir':
+	file { '/vagrant/.ssh':
 		ensure => directory,
 		owner => 'vagrant',
 		group => 'vagrant',
