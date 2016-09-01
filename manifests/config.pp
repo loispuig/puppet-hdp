@@ -15,58 +15,6 @@ class hdp::config inherits hdp {
 		require => Class[ 'apache', 'php7' ],
 	}
 
-	/*exec { 'ssh-keygen':
-		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-		command => 'ssh-keygen -t rsa -b 4096 -N "" -C "" -q -f /vagrant/.ssh/id_rsa',
-		unless  => [ "test -f /vagrant/.ssh/id_rsa" ],
-		require => Package['openssh-server'],
-	} ->
-
-	file { "ssh-key-perms":
-		path 	=> '/vagrant/.ssh/id_rsa',
-		ensure  => present,
-		owner   => 'vagrant',
-		group   => 'vagrant',
-		mode    => '0600',
-	} ->
-
-	exec { 'ssl-dhparam':
-		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-		command => "openssl dhparam ${dhparam} -out /etc/ssl/private/dh${dhparam}.pem",
-		unless  => [ "test -f /etc/ssl/private/dh${dhparam}.pem" ],
-		require => Package['openssl'],
-	} ->
-
-	# Set file access
-	file { "ssl-dhparam-perms":
-		path 	=> "/etc/ssl/private/dh${dhparam}.pem",
-		ensure  => present,
-		owner   => 'root',
-		group   => 'root',
-		mode    => '0600',
-		require => Exec['ssl-dhparam'],
-	} ->
-
-	file { "ssl-conf":
-		path 	=> '/etc/ssl/private/openssl.cnf',
-		ensure  => present,
-		owner   => 'root',
-		group   => 'root',
-		mode    => '0600',
-		content => template('hdp/cert.cnf.erb'),
-	} ->
-
-	exec { 'ssl-gen-key':
-		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-		command => "openssl genrsa -out /etc/ssl/private/key.pem 4096",
-		require => Package['openssl'],
-	} ->
-
-	exec { 'ssl-gen-cert':
-		path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
-		command => "openssl req -new -x509 -${hash} -days 3650 -extensions v3_ca -passin pass:root -config /etc/ssl/private/openssl.cnf -key /etc/ssl/private/key.pem -out /etc/ssl/private/cert.pem",
-	}*/
-
 	apache::vhost { 'localhost':
 		servername => 'localhost',
 		serveraliases => "${aliases}",
@@ -146,6 +94,58 @@ Protocols h2 http/1.1',
 	else {
 		package { 'python-certbot-apache':
 			ensure => 'purged',
+		}
+
+		exec { 'ssh-keygen':
+			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+			command => 'ssh-keygen -t rsa -b 4096 -N "" -C "" -q -f /vagrant/.ssh/id_rsa',
+			unless  => [ "test -f /vagrant/.ssh/id_rsa" ],
+			require => Package['openssh-server'],
+		} ->
+
+		file { "ssh-key-perms":
+			path 	=> '/vagrant/.ssh/id_rsa',
+			ensure  => present,
+			owner   => 'vagrant',
+			group   => 'vagrant',
+			mode    => '0600',
+		} ->
+
+		exec { 'ssl-dhparam':
+			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+			command => "openssl dhparam ${dhparam} -out /etc/ssl/private/dh${dhparam}.pem",
+			unless  => [ "test -f /etc/ssl/private/dh${dhparam}.pem" ],
+			require => Package['openssl'],
+		} ->
+
+		# Set file access
+		file { "ssl-dhparam-perms":
+			path 	=> "/etc/ssl/private/dh${dhparam}.pem",
+			ensure  => present,
+			owner   => 'root',
+			group   => 'root',
+			mode    => '0600',
+			require => Exec['ssl-dhparam'],
+		} ->
+
+		file { "ssl-conf":
+			path 	=> '/etc/ssl/private/openssl.cnf',
+			ensure  => present,
+			owner   => 'root',
+			group   => 'root',
+			mode    => '0600',
+			content => template('hdp/cert.cnf.erb'),
+		} ->
+
+		exec { 'ssl-gen-key':
+			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+			command => "openssl genrsa -out /etc/ssl/private/key.pem 4096",
+			require => Package['openssl'],
+		} ->
+
+		exec { 'ssl-gen-cert':
+			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
+			command => "openssl req -new -x509 -${hash} -days 3650 -extensions v3_ca -passin pass:root -config /etc/ssl/private/openssl.cnf -key /etc/ssl/private/key.pem -out /etc/ssl/private/cert.pem",
 		}
 	}
 
