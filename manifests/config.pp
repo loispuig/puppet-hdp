@@ -64,7 +64,6 @@ Protocols h2 http/1.1',
 
 	# LetsEncrypt
 	if $letsencrypt[install] {
-
 		$domains = split($letsencrypt[domains], ',')
 		notice($domains[0])
 
@@ -94,7 +93,7 @@ Protocols h2 http/1.1',
 	else {
 		package { 'python-certbot-apache':
 			ensure => 'purged',
-		}
+		} ->
 
 		exec { 'ssh-keygen':
 			path    => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ],
