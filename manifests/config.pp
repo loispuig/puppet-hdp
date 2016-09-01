@@ -21,6 +21,14 @@ class hdp::config inherits hdp {
 		mode    => '0600',
 	} ->
 
+	file { "ssh-key-perms":
+		path 	=> '/vagrant/.ssh/id_rsa.pub',
+		ensure  => present,
+		owner   => 'vagrant',
+		group   => 'vagrant',
+		mode    => '0644',
+	} ->
+
 	file { 'remove-default-html-directory':
 		ensure => absent,
 		path => '/var/www/html',
